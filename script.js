@@ -16,10 +16,10 @@ function Gameboard() {
   const getBoard = () => board; // a stored function to get the board for the ui
 
   const markCell = (row, column, player) => { 
-    if(board[row - 1][column - 1].getValue !== 0) { // takes the row and column of the cell and checks if it's already been marked
-      return;
-    };
-    return board[row - 1][column - 1].addToken(player); //mark the cell with the player token
+    if(board[row - 1][column - 1].getValue() !== 0) {
+      throw new Error('Cell already occupied');
+    }
+    board[row - 1][column - 1].addToken(player); //mark the cell with the player token
   }
 
   const printBoard = () => { //only for console game (not needed after ui is built)
