@@ -9,14 +9,21 @@ function Gameboard() {
       board[i].push(Cell())
     }
   }
-
   const getBoard = () => board;
 
-  const playerMove = (row, column, player) {
-    const availableCells = board.filter((row) => row[column].getValue() === 0);
+  const markCell = (row, column, player) => {
+    if(board[row][column].getValue !== 0) {
+      return;
+    };
+    board[row][column].addToken(player);
   }
 
-  return { gameboard, players, }
+  const printBoard = () => { //only for console game (not needed after ui is built)
+    const boardWithCellValues = board.map((row) => row.map((cell) => cell.getValue()))
+    console.log(boardWithCellValues);
+  };
+
+  return { getBoard, markCell, printBoard }
 }
 
 function Cell() {
