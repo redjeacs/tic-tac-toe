@@ -1,7 +1,7 @@
 function Gameboard() {
   const rows = 3;
   const columns = 3;
-  const board = [] 
+  const board = [];
   //board is stored as an array with rows being the nested arrays. 
   // [[0, 0, 0], 
   //  [0, 0, 0], 
@@ -16,10 +16,10 @@ function Gameboard() {
   const getBoard = () => board; // a stored function to get the board for the ui
 
   const markCell = (row, column, player) => { 
-    if(board[row - 1][column - 1].getValue() !== 0) {
+    if(board[row][column].getValue() !== 0) {
       throw new Error('Cell already occupied');
     }
-    board[row - 1][column - 1].addToken(player); //mark the cell with the player token
+    board[row][column].addToken(player); //mark the cell with the player token
   }
 
   const printBoard = () => { //only for console game (not needed after ui is built)
@@ -68,7 +68,43 @@ function GameController(playerOneName = 'Player One', playerTwoName = 'Player Tw
   
   printNewRound(); //start of game message for fresh board
 
-  return { playRound, getActivePlayer } //object to play out rounds of tic tac toe with getActivePlayer object for ui
+  return { playRound, getActivePlayer }; //object to play out rounds of tic tac toe with getActivePlayer object for ui
 }
 
-const game = GameController();
+function ScreenController() {
+  const game = GameController(); //call the GameController module
+  const playerTurnDiv = document.querySelector('.turn'); //call html h1 and stored in variable
+  const boardDiv = document.querySelector('.board'); //call div for storing board
+  const updateScreen = () => {
+    boardDiv.textContent = ''; //clear board
+
+    const board = game.getBoard(); //get board state and store in board
+    const activePlayer = game.getActivePlayer; //get current active player
+
+    playerTurnDiv.textContent = `${activePlayer}'s Turn`; //announce player turn in h1
+
+    board.forEach((row, index) => { //for each row in board
+      row.forEach((cell, index) => { // for each cell in row
+        const cellButton = document.createElement('button'); // add a cellButton
+        cellButton.classList.add('cell'); //add a class of cell to the buttons
+        cellButton.dataset.column = index; //create a data-column attribute to identify column
+        cellButton.textContent = cell.getValue;
+        boardDiv.appendChild(cellButton);
+      });
+      cellButton.dataset.row = index; // add a data attribute for row
+    });
+  };
+  function clickHandlerBoard(e) {
+    const selectedColumn = e.target.dataset.column;
+    const selectedRow = e.target.dataset.row;
+    if(!selectedColumn || !selectedRow) {
+      return; //check if i click a cell not the gaps in between
+    }
+    game.playRound(selectedRow, selectedColumn);
+    updateScreen();
+  };
+  boardDiv.addEventListener('click', clickHandlerBoard);
+  updateScreen(); //initial board render
+} //no return needed for this module (everything is in here already)
+
+ScreenController();
