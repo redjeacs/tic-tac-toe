@@ -13,6 +13,7 @@ function Gameboard() {
       board[i].push(Cell())
     }
   }
+
   const getBoard = () => board; // a stored function to get the board for the ui
 
   const markCell = (row, column, player) => { 
@@ -34,7 +35,7 @@ function Cell() {
   let value = 0; //initial cell value in a fresh board is 0
   
   const addToken = (player) => { //a private function for cells in the board to change the cell value to the player Token values (player one = 1, player two = 2)
-    value = player
+    value = player;
   };
 
   const getValue = () => value; //retrieve the current value of the cell
@@ -56,7 +57,7 @@ function GameController(playerOneName = 'Player One', playerTwoName = 'Player Tw
 
   const printNewRound = () => { //console log current board condition and new player's turn
     board.printBoard();
-    console.log(`${getActivePlayer}'s turn`);
+    console.log(`${getActivePlayer().name}'s turn`);
   }
 
   const playRound = (row, column) => {
@@ -68,7 +69,7 @@ function GameController(playerOneName = 'Player One', playerTwoName = 'Player Tw
   
   printNewRound(); //start of game message for fresh board
 
-  return { playRound, getActivePlayer }; //object to play out rounds of tic tac toe with getActivePlayer object for ui
+  return { playRound, getActivePlayer, getBoard: board.getBoard }; //object to play out rounds of tic tac toe with getActivePlayer object for ui
 }
 
 function ScreenController() {
@@ -79,19 +80,19 @@ function ScreenController() {
     boardDiv.textContent = ''; //clear board
 
     const board = game.getBoard(); //get board state and store in board
-    const activePlayer = game.getActivePlayer; //get current active player
+    const activePlayer = game.getActivePlayer().name; //get current active player
 
     playerTurnDiv.textContent = `${activePlayer}'s Turn`; //announce player turn in h1
 
-    board.forEach((row, index) => { //for each row in board
+    board.forEach((row) => { //for each row in board
       row.forEach((cell, index) => { // for each cell in row
         const cellButton = document.createElement('button'); // add a cellButton
         cellButton.classList.add('cell'); //add a class of cell to the buttons
         cellButton.dataset.column = index; //create a data-column attribute to identify column
-        cellButton.textContent = cell.getValue;
+        cellButton.dataset.row = board.indexOf(row);
+        cellButton.textContent = cell.getValue();
         boardDiv.appendChild(cellButton);
       });
-      cellButton.dataset.row = index; // add a data attribute for row
     });
   };
   function clickHandlerBoard(e) {
