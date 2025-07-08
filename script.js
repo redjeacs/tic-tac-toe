@@ -60,9 +60,68 @@ function GameController(playerOneName = 'Player One', playerTwoName = 'Player Tw
     console.log(`${getActivePlayer().name}'s turn`);
   }
 
+  const checkWin = (board) => { 
+    const player = getActivePlayer().name;
+    const playerValue = getActivePlayer().token;
+    for(let i = 0; i < 3; i++) { //iterate through 3 rows
+      if(
+      board[i][0].getValue() === playerValue && //the board array's row i cell 0 value must match current player token
+      board[i][1].getValue() === playerValue && // cell 1 value
+      board[i][2].getValue() === playerValue // cell 2 value (all must be equal to current player)
+      ) {
+        console.log(`${player} wins!`); //announce winner in console
+        return player;
+      }
+    }
+    for(let j = 0; j < 3; j++) { //iterate through 3 columns
+      if(
+        board[0][j].getValue() === playerValue && // row 0 column j
+        board[1][j].getValue() === playerValue && // row 1 column j
+        board[2][j].getValue() === playerValue // row 2 column j (must all match current player token)
+      ) {
+        console.log(`${player} wins!`); //announce winner in console
+        return player;
+      }
+    }
+    if( //first diagonal check
+    board[0][0].getValue() === playerValue && // top left corner cell
+    board[1][1].getValue() === playerValue && // middle cell
+    board[2][2].getValue() === playerValue // bottom right corner cell (must all match current player token)
+    ) {
+      console.log(`${player} wins!`); //announce winner in console
+      return player;
+    }
+    if( //second diagonal check
+    board[0][2].getValue() === playerValue && //top right corner cell
+    board[1][1].getValue() === playerValue && //middle cell
+    board[2][0].getValue() === playerValue //bottom left corner cell
+    ) {
+      console.log(`${player} wins!`); //announce winner in console
+      return player;
+    }
+    let fullBoard = true; //set fullBoard true and check for 0 in board
+    for(let i = 0; i < 3; i++) { // for row
+      for(let j = 0; j < 3; j++) {// for column 
+        if(board[i][j].getValue() === 0) { //if current cell is 0
+          fullBoard = false; // board is not full yet
+          break; //end the function early
+        }
+      }
+      if(fullBoard === true) { //if every cell has a player token (!0)
+        console.log('Tie'); //announce tie in console
+        return 'Tie';
+      }
+    }
+    return null; //no winner yet
+  }
+
+ 
+
   const playRound = (row, column) => {
-    console.log(`Dropping ${getActivePlayer}'s token into row ${row} and column ${column}`) //for console game
+    console.log(board.getBoard())
+    console.log(`Dropping ${getActivePlayer().name}'s token into row ${row} and column ${column}`) //for console game
     board.markCell(row, column, getActivePlayer().token); //mark the cell at row and column with activeplayer's token
+    checkWin(board.getBoard());
     switchPlayerTurn();
     printNewRound();
   };
