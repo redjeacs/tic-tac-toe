@@ -107,21 +107,23 @@ function GameController(playerOneName = 'Player One', playerTwoName = 'Player Tw
           break; //end the function early
         }
       }
-      if(fullBoard === true) { //if every cell has a player token (!0)
+      if(!fullBoard) break;
+    }
+    if(fullBoard) { //if every cell has a player token (!0)
         console.log('Tie'); //announce tie in console
         return 'Tie';
       }
-    }
     return null; //no winner yet
   }
 
  
 
   const playRound = (row, column) => {
-    console.log(board.getBoard())
     console.log(`Dropping ${getActivePlayer().name}'s token into row ${row} and column ${column}`) //for console game
     board.markCell(row, column, getActivePlayer().token); //mark the cell at row and column with activeplayer's token
-    checkWin(board.getBoard());
+    if(checkWin(board.getBoard()) === getActivePlayer().name || checkWin(board.getBoard()) === 'Tie') {
+      return;
+    }
     switchPlayerTurn();
     printNewRound();
   };
