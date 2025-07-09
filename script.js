@@ -120,8 +120,6 @@ function GameController(playerOneName = 'Player One', playerTwoName = 'Player Tw
     console.log(`Dropping ${getActivePlayer().name}'s token into row ${row} and column ${column}`) //for console game
     board.markCell(row, column, getActivePlayer().token); //mark the cell at row and column with activeplayer's token
     if(checkWin(board.getBoard()) === getActivePlayer().name || checkWin(board.getBoard()) === 'Tie') {
-      printNewRound();
-      return;
     }
     switchPlayerTurn();
     printNewRound();
@@ -136,6 +134,7 @@ function ScreenController() {
   const game = GameController(); //call the GameController module
   const playerTurnDiv = document.querySelector('.turn'); //call html h1 and stored in variable
   const boardDiv = document.querySelector('.board'); //call div for storing board
+  
   const updateScreen = () => {
     boardDiv.textContent = ''; //clear board
 
@@ -172,10 +171,18 @@ function ScreenController() {
     game.playRound(selectedRow, selectedColumn);
     updateScreen();
   };
+
   boardDiv.addEventListener('click', clickHandlerBoard);
+
+  function RestartGame() {
+    boardDiv.removeEventListener('click', clickHandlerBoard)
+    ScreenController();
+  }
+
+  const restartBtn = document.querySelector('.restart-game');
+  restartBtn.addEventListener('click', () => RestartGame());
+
   updateScreen(); //initial board render
 } //no return needed for this module (everything is in here already)
-
-const restartBtn = document.querySelector('.restart-game');
-restartBtn.addEventListener('click', () => ScreenController());
 ScreenController();
+
