@@ -123,7 +123,6 @@ function GameController(playerOneName = 'Player One', playerTwoName = 'Player Tw
       const gameEndDisplay = document.querySelector('dialog');
       gameEndDisplay.showModal();
       gameEndDisplay.firstChild.textContent = `${getActivePlayer().name} Wins!`;
-      
       return;
     }
     switchPlayerTurn();
@@ -186,8 +185,11 @@ function ScreenController() {
     ScreenController();
   }
 
-  const restartBtn = document.querySelector('.restart-game');
-  restartBtn.addEventListener('click', () => RestartGame());
+  const restartBtn = document.querySelectorAll('.restart-game');
+  restartBtn.forEach(button => {
+    button.addEventListener('click', () => RestartGame());
+  })
+  
 
   updateScreen(); //initial board render
 } //no return needed for this module (everything is in here already)
