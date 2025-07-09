@@ -116,12 +116,11 @@ function GameController(playerOneName = 'Player One', playerTwoName = 'Player Tw
     return null; //no winner yet
   }
 
- 
-
   const playRound = (row, column) => {
     console.log(`Dropping ${getActivePlayer().name}'s token into row ${row} and column ${column}`) //for console game
     board.markCell(row, column, getActivePlayer().token); //mark the cell at row and column with activeplayer's token
     if(checkWin(board.getBoard()) === getActivePlayer().name || checkWin(board.getBoard()) === 'Tie') {
+      printNewRound();
       return;
     }
     switchPlayerTurn();
@@ -130,7 +129,7 @@ function GameController(playerOneName = 'Player One', playerTwoName = 'Player Tw
   
   printNewRound(); //start of game message for fresh board
 
-  return { playRound, getActivePlayer, getBoard: board.getBoard }; //object to play out rounds of tic tac toe with getActivePlayer object for ui
+  return { playRound, getActivePlayer, getBoard: board.getBoard, checkWin }; //object to play out rounds of tic tac toe with getActivePlayer object for ui
 }
 
 function ScreenController() {
@@ -151,7 +150,15 @@ function ScreenController() {
         cellButton.classList.add('cell'); //add a class of cell to the buttons
         cellButton.dataset.column = index; //create a data-column attribute to identify column
         cellButton.dataset.row = board.indexOf(row);
-        cellButton.textContent = cell.getValue();
+        if(cell.getValue() === 1) {
+          cellButton.textContent = 'O';
+        }
+        else if(cell.getValue() === 2) {
+          cellButton.textContent = 'X';
+        }
+        else {
+          cellButton.textContent = '';
+        }
         boardDiv.appendChild(cellButton);
       });
     });
@@ -169,4 +176,6 @@ function ScreenController() {
   updateScreen(); //initial board render
 } //no return needed for this module (everything is in here already)
 
+const restartBtn = document.querySelector('.restart-game');
+restartBtn.addEventListener('click', () => ScreenController());
 ScreenController();
