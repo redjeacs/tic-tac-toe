@@ -120,6 +120,11 @@ function GameController(playerOneName = 'Player One', playerTwoName = 'Player Tw
     console.log(`Dropping ${getActivePlayer().name}'s token into row ${row} and column ${column}`) //for console game
     board.markCell(row, column, getActivePlayer().token); //mark the cell at row and column with activeplayer's token
     if(checkWin(board.getBoard()) === getActivePlayer().name || checkWin(board.getBoard()) === 'Tie') {
+      const gameEndDisplay = document.querySelector('dialog');
+      gameEndDisplay.showModal();
+      gameEndDisplay.firstChild.textContent = `${getActivePlayer().name} Wins!`;
+      
+      return;
     }
     switchPlayerTurn();
     printNewRound();
@@ -175,6 +180,8 @@ function ScreenController() {
   boardDiv.addEventListener('click', clickHandlerBoard);
 
   function RestartGame() {
+    const endGameDisplay = document.querySelector('dialog');
+    endGameDisplay.close();
     boardDiv.removeEventListener('click', clickHandlerBoard)
     ScreenController();
   }
